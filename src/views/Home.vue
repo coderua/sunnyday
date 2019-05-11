@@ -1,18 +1,35 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <search-city-field @newSearch="searchWeather"></search-city-field>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+import SearchCityField from './SearchCityField.vue';
+import WeatherServiceFactory from '../services/WeatherServiceFactory';
+
+const weatherService = WeatherServiceFactory.create();
 
 export default {
   name: 'home',
   components: {
-    HelloWorld,
+    SearchCityField,
+  },
+  data() {
+    return {
+      city: 'Warsaw',
+      currentWeather: null,
+    };
+  },
+  created() {
+    weatherService.getWeather(this.city).then((weather) => {
+      this.currentWeather = weather;
+    });
+  },
+  methods: {
+    searchWeather({ query }) {
+      console.log(query);
+    },
   },
 };
 </script>
