@@ -163,7 +163,6 @@ class BaseWeatherService {
    * @return {this}
    */
   _checkHttpClient(httpClient) {
-    console.log(typeof httpClient);
     if (!httpClient || typeof httpClient !== 'function') {
       throw new Error('[OpenWeatherMapAPIService]: Invalid HTTP Client.');
     }

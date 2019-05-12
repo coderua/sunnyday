@@ -14,6 +14,11 @@ const config = {
       },
     },
   },
+  environment: {
+    test: {
+
+    },
+  },
 };
 
 export default config;
