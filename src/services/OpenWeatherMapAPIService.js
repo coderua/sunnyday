@@ -8,7 +8,11 @@ const checkUnits = Symbol('checkUnits');
 //
 // Available values for different options.
 //
-const availableUnitOptions = ['standard', 'metric', 'imperial'];
+const availableUnitOptions = [
+  'standard', // Default value for the
+  'metric', // For temperature in Celsius
+  'imperial', // For temperature in Fahrenheit
+];
 
 /**
  * OpenWeatherMapAPIService class
@@ -43,17 +47,48 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
   /**
    * Returns current weather for specified city
    *
-   * @param {String} city
+   * @param {Object} params
    * @return {Promise<Object | Error>}
    */
-  getWeather(city) {
-    if (!city) {
-      return Promise.reject(new Error('Please specify the city'));
+  getCurrentWeather(params) {
+    if (!params.q && !(params.lat && params.lon)) {
+      return Promise.reject(new Error('Please specify the city or location'));
     }
 
-    const url = `${this._apiEndpoint}/weather?q=${city}&units=${this.#units}&appid=${this._apiKey}`;
+    const query = BaseWeatherService.createQuery({
+      appid: this._apiKey,
+      units: this.#units,
+      ...params,
+    });
 
-    console.log('Url: ', url);
+    const url = `${this._apiEndpoint}/weather?${query}`;
+
+    console.log('[OpenWeatherMapAPIService]: Request => ', url);
+
+    return this.httpClient.get(url)
+      .then(response => response.data);
+  }
+
+  /**
+   * Returns five days forecast.
+   *
+   * @param {Object} params
+   * @return {Promise<Object | Error>}
+   */
+  getFiveDayWeather(params) {
+    if (!params.q && !(params.lat && params.lon)) {
+      return Promise.reject(new Error('Please specify the city or location'));
+    }
+
+    const query = BaseWeatherService.createQuery({
+      appid: this._apiKey,
+      units: this.#units,
+      ...params,
+    });
+
+    const url = `${this._apiEndpoint}/forecast?${query}`;
+
+    console.log('[OpenWeatherMapAPIService]: Request => ', url);
 
     return this.httpClient.get(url)
       .then(response => response.data);

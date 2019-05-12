@@ -169,6 +169,22 @@ class BaseWeatherService {
 
     return this;
   }
+
+  //-------
+  // Helpers
+  //-------
+
+  /**
+   * Creates a query string for a passed object.
+   *
+   * @param {Object} [params={}]
+   * @return {string}
+   */
+  static createQuery(params = {}) {
+    return Object.keys(params)
+      .map(name => `${encodeURIComponent(name)}=${encodeURIComponent(params[name])}`)
+      .join('&');
+  }
 }
 
 export default BaseWeatherService;

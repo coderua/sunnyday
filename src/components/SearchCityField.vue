@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     search() {
-      this.$emit('newSearch', { query: this.query.trim() });
+      this.$emit('newSearch', { q: this.query.trim() });
     },
   },
 };

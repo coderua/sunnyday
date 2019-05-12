@@ -1,12 +1,19 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <weather-app></weather-app>
   </div>
 </template>
+
+<script>
+import WeatherApp from './components/WeatherApp';
+
+export default {
+  name: 'App',
+  components: {
+    WeatherApp,
+  },
+};
+</script>
 
 <style>
 #app {
