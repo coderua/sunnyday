@@ -25,11 +25,13 @@ describe('OpenWeatherMapAPIService.js', () => {
 
   it('creates an instance with API key and custom endpoint', () => {
     // Arrangement
-    const apiKey = 't29d92731317fdaccd0c9cu7c5k8066y';
-    const apiEndpoint = 'https://api.openweathermap.org/v2';
+    const config = {
+      apiKey: 't29d92731317fdaccd0c9cu7c5k8066y',
+      apiEndpoint: 'https://api.openweathermap.org/v2',
+    };
 
     // Acting
-    const openWeatherMapAPIService = new OpenWeatherMapAPIService(apiKey, apiEndpoint);
+    const openWeatherMapAPIService = new OpenWeatherMapAPIService(config);
 
     // Assertion
     expect(openWeatherMapAPIService).toBeInstanceOf(OpenWeatherMapAPIService);
@@ -37,25 +39,25 @@ describe('OpenWeatherMapAPIService.js', () => {
 
   it('validates an API key', () => {
     // Arrangement
-    const apiKey = 'abcdefghigklmnopqrstuvwxyz';
+    const config = { apiKey: 'abcdefghigklmnopqrstuvwxyz' };
 
     // Acting && Assertion
-    expect(() => new OpenWeatherMapAPIService(apiKey)).toThrow(/Invalid API key/);
+    expect(() => new OpenWeatherMapAPIService(config)).toThrow(/Invalid API key/);
     expect(() => {
       const openWeatherMapAPIService = new OpenWeatherMapAPIService();
 
-      openWeatherMapAPIService.apiKey = apiKey;
+      openWeatherMapAPIService.apiKey = config.apiKey;
     })
       .toThrow(/Invalid API key/);
   });
 
   it('validates an API endpoint', () => {
     // Arrangement
-    const apiKey = 't29d92731317fdaccd0c9cu7c5k8066y';
+    const config = { apiKey: 't29d92731317fdaccd0c9cu7c5k8066y' };
 
     // Acting && Assertion
     expect(() => {
-      const openWeatherMapAPIService = new OpenWeatherMapAPIService(apiKey);
+      const openWeatherMapAPIService = new OpenWeatherMapAPIService(config);
 
       openWeatherMapAPIService.apiEndpoint = '';
     })
@@ -69,7 +71,6 @@ describe('OpenWeatherMapAPIService.js', () => {
 
     const openWeatherMapAPIService = new OpenWeatherMapAPIService();
 
-
     // Acting
     openWeatherMapAPIService.httpClient = httpClient;
 
@@ -79,13 +80,13 @@ describe('OpenWeatherMapAPIService.js', () => {
     moxios.uninstall(httpClient);
   });
 
-  it('validates an HTTP client', () => {
+  it('validates an HTTP client for invalid instance', () => {
     // Arrangement
     const openWeatherMapAPIService = new OpenWeatherMapAPIService();
 
     // Acting && Assertion
     expect(() => {
-      openWeatherMapAPIService.httpClient = {};
+      openWeatherMapAPIService.httpClient = 'not a valid http client';
     })
       .toThrow(/Invalid HTTP Client/);
   });

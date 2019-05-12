@@ -7,9 +7,9 @@ import OpenWeatherMapAPIService from './OpenWeatherMapAPIService';
  */
 class WeatherServiceFactory {
   static create() {
-    const { apiKey, endpoint } = ConfigService.get('services.openweathermap');
+    const config = ConfigService.get('services.openweathermap', {});
 
-    return new OpenWeatherMapAPIService(apiKey, endpoint, axios.create());
+    return new OpenWeatherMapAPIService({ ...config, httpClient: axios.create() });
   }
 }
 

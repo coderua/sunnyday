@@ -1,56 +1,42 @@
+import BaseWeatherService from './BaseWeatherService';
+
 //
-// Symbols for private method names
+// Symbols for private method names.
 //
-const checkApiKey = Symbol('checkApiKey');
-const checkEndpoint = Symbol('checkEndpoint');
-const checkHttpClient = Symbol('checkHttpClient');
+const checkUnits = Symbol('checkUnits');
+
+//
+// Available values for different options.
+//
+const availableUnitOptions = ['standard', 'metric', 'imperial'];
 
 /**
  * OpenWeatherMapAPIService class
  *
  * @class
  * @classdesc Provides functionality to get Weather Forecast from OpenWeather API.
+ * @extends BaseWeatherService
  */
-class OpenWeatherMapAPIService {
+class OpenWeatherMapAPIService extends BaseWeatherService {
   /**
-   * API key to have an ability make call to the service.
+   * Units format:
+   * standard, metric, and imperial units are available.
    *
+   * @private
    * @type {String}
    */
-  #apiKey = '';
-
-  /**
-   * Endpoint for the service.
-   *
-   * @type {String}
-   */
-  #apiEndpoint = 'https://api.openweathermap.org/data/2.5';
-
-  /**
-   * HTTP client provide functionality to make API calls.
-   *
-   * @type {Object|axios}
-   */
-  #httpClient;
+  #units = 'metric';
 
   /**
    * OpenWeatherMapAPIService class constructor.
    *
-   * @param {String|undefined} apiKey
-   * @param {String|undefined} apiEndpoint
-   * @param {Object|undefined} httpClient
+   * @param {Object} [options={}]
    */
-  constructor(apiKey = undefined, apiEndpoint = undefined, httpClient = undefined) {
-    if (apiKey) {
-      this.apiKey = apiKey;
-    }
+  constructor(options = {}) {
+    super(options);
 
-    if (apiEndpoint) {
-      this.apiEndpoint = apiEndpoint;
-    }
-
-    if (httpClient) {
-      this.#httpClient = httpClient;
+    if (options.units) {
+      this.#units = options.units;
     }
   }
 
@@ -65,9 +51,11 @@ class OpenWeatherMapAPIService {
       return Promise.reject(new Error('Please specify the city'));
     }
 
-    const url = `${this.#apiEndpoint}/weather?q=${city}&appid=${this.#apiKey}`;
+    const url = `${this._apiEndpoint}/weather?q=${city}&units=${this.#units}&appid=${this._apiKey}`;
 
-    return this.#httpClient.get(url)
+    console.log('Url: ', url);
+
+    return this.httpClient.get(url)
       .then(response => response.data);
   }
 
@@ -76,56 +64,23 @@ class OpenWeatherMapAPIService {
   //-------
 
   /**
-   * Setter for API key value.
+   * Sets units value
    *
-   * @param {String} apiKey
+   * @param {String} units
    */
-  set apiKey(apiKey) {
-    this[checkApiKey](apiKey);
+  set units(units) {
+    this[checkUnits](units);
 
-    this.#apiKey = apiKey;
+    this.#units = units;
   }
 
   /**
-   * Returns API endpoint value.
+   * Returns units value.
    *
    * @return {string}
    */
-  get apiEndpoint() {
-    return this.#apiEndpoint;
-  }
-
-  /**
-   * Setter for API endpoint value.
-   *
-   * @param {String} endpoint
-   * @throws Error
-   */
-  set apiEndpoint(endpoint) {
-    this[checkEndpoint](endpoint);
-
-    this.#apiEndpoint = endpoint;
-  }
-
-  /**
-   * Returns HTTP Client instance.
-   *
-   * @return {Object}
-   */
-  get httpClient() {
-    return this.#httpClient;
-  }
-
-  /**
-   * Setter for HTTP client to make API calls.
-   *
-   * @param {Object} httpClient
-   * @throws Error
-   */
-  set httpClient(httpClient) {
-    this[checkHttpClient](httpClient);
-
-    this.#httpClient = httpClient;
+  get units() {
+    return this.#units;
   }
 
   //-------
@@ -133,48 +88,15 @@ class OpenWeatherMapAPIService {
   //-------
 
   /**
-   * Checks API key for validity.
+   * Checks units for validity.
    *
-   * @return {OpenWeatherMapAPIService}
-   * @throws Error
-   */
-  [checkApiKey](apiKey) {
-    if (!apiKey) {
-      throw new Error('[OpenWeatherMapAPIService]: Empty API key for the openweathermap.org service.');
-    }
-
-    if (apiKey.length !== 32) {
-      throw new Error('[OpenWeatherMapAPIService]: Invalid API key for the openweathermap.org service.');
-    }
-
-    return this;
-  }
-
-  /**
-   * Checks endpoint for validity.
-   *
-   * @param {String} endpoint
+   * @private
+   * @param {String} units
    * @return {OpenWeatherMapAPIService}
    */
-  [checkEndpoint](endpoint) {
-    if (!endpoint) {
-      throw new Error('[OpenWeatherMapAPIService]: Invalid API endpoint. Expected url.');
-    }
-
-    // @todo Improvement: add checks for url format
-
-    return this;
-  }
-
-  /**
-   * Checks HTTP Client for validity.
-   *
-   * @param {Object} httpClient
-   * @return {OpenWeatherMapAPIService}
-   */
-  [checkHttpClient](httpClient) {
-    if (!httpClient || !httpClient.get) {
-      throw new Error('[OpenWeatherMapAPIService]: Invalid HTTP Client.');
+  [checkUnits](units) {
+    if (!units || !availableUnitOptions[units]) {
+      throw new Error(`[OpenWeatherMapAPIService]: Invalid units value '${units}'. Available values are: ${availableUnitOptions.join(', ')}`);
     }
 
     return this;

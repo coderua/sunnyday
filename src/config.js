@@ -9,7 +9,8 @@ const config = {
       // Weather services
       openweathermap: {
         apiKey: '',
-        endpoint: 'https://api.openweathermap.org/data/2.5',
+        apiEndpoint: 'https://api.openweathermap.org/data/2.5',
+        units: 'metric',
       },
     },
   },
