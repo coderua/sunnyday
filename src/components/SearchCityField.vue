@@ -1,10 +1,12 @@
 <template>
-    <form @submit.prevent="search">
+    <form @submit.prevent="searchByCity">
       <input
         v-model="query"
         name="search"
         type="search"
       />
+      <button>Search</button>
+      <button type="button" @click="searchByLocation">Current location</button>
     </form>
 </template>
 
@@ -15,6 +17,8 @@
  * Custom tag `<search-city-field />`
  *
  * @vuedoc
+ * @emits searchByCity
+ * @emits searchByLocation
  * @exports views/SearchCityField
  */
 export default {
@@ -25,8 +29,20 @@ export default {
     };
   },
   methods: {
-    search() {
-      this.$emit('newSearch', { q: this.query.trim() });
+    searchByCity() {
+      const query = this.query.trim();
+
+      if (query.length === 0) {
+        // Empty query: searching by current location.
+        this.searchByLocation();
+
+        return;
+      }
+
+      this.$emit('searchByCity', { q: this.query.trim() });
+    },
+    searchByLocation() {
+      this.$emit('searchByLocation');
     },
   },
 };

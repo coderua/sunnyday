@@ -1,5 +1,8 @@
 <template>
-  <search-city-field @newSearch="searchWeather"></search-city-field>
+  <search-city-field
+    @searchByCity="fetchWeather"
+    @searchByLocation="fetchByLocation"
+  />
 </template>
 
 <script>
@@ -14,6 +17,8 @@ const weatherService = WeatherServiceFactory.create();
  * Custom tag `<weather-app />`
  *
  * @vuedoc
+ * @listens searchByCity
+ * @listens searchByLocation
  * @exports components/WeatherApp
  */
 export default {
@@ -29,23 +34,30 @@ export default {
     };
   },
   created() {
-    Promise.all([
-      // Get current weather for the location
-      weatherService.getCurrentWeather({ q: this.city }),
-      // Get five days forecast for the location
-      weatherService.getFiveDayWeather({ q: this.city }),
-    ])
-      .then(([currentWeather, fiveDayWeather]) => {
-        this.currentWeather = currentWeather;
-        this.fiveDayWeather = fiveDayWeather;
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    this.fetchByLocation();
   },
   methods: {
-    searchWeather(event) {
-      console.log(event);
+    fetchByLocation() {
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.fetchWeather({ lat: position.coords.latitude, lon: position.coords.longitude });
+        });
+      }
+    },
+    fetchWeather(params) {
+      Promise.all([
+        // Get current weather for the location
+        weatherService.getCurrentWeather(params),
+        // Get five days forecast for the location
+        weatherService.getFiveDayWeather(params),
+      ])
+        .then(([currentWeather, fiveDayWeather]) => {
+          this.currentWeather = currentWeather;
+          this.fiveDayWeather = fiveDayWeather;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
   },
 };
