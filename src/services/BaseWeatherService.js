@@ -128,11 +128,11 @@ class BaseWeatherService {
    */
   _checkApiKey(apiKey) {
     if (!apiKey) {
-      throw new Error('[OpenWeatherMapAPIService]: Empty API key for the openweathermap.org service.');
+      throw new Error(`[${this.name}]: Empty API key for the openweathermap.org service.`);
     }
 
     if (apiKey.length !== 32) {
-      throw new Error('[OpenWeatherMapAPIService]: Invalid API key for the openweathermap.org service.');
+      throw new Error(`[${this.name}]: Invalid API key for the openweathermap.org service.`);
     }
 
     return this;
@@ -147,7 +147,7 @@ class BaseWeatherService {
    */
   _checkEndpoint(endpoint) {
     if (!endpoint) {
-      throw new Error('[OpenWeatherMapAPIService]: Invalid API endpoint. Expected url.');
+      throw new Error(`[${this.name}]: Invalid API endpoint. Expected url.`);
     }
 
     // @todo Improvement: add checks for url format
@@ -164,7 +164,7 @@ class BaseWeatherService {
    */
   _checkHttpClient(httpClient) {
     if (!httpClient || typeof httpClient !== 'function') {
-      throw new Error('[OpenWeatherMapAPIService]: Invalid HTTP Client.');
+      throw new Error(`[${this.name}]: Invalid HTTP Client.`);
     }
 
     return this;
@@ -181,6 +181,14 @@ class BaseWeatherService {
    * @return {string}
    */
   static createQuery(params = {}) {
+    if (!params) {
+      return '';
+    }
+
+    if (typeof params !== 'object') {
+      throw new Error(`[${this.name}]: createQuery(params) method expects first param to be type of 'Object'. Got '${typeof params}'.`);
+    }
+
     return Object.keys(params)
       .map(name => `${encodeURIComponent(name)}=${encodeURIComponent(params[name])}`)
       .join('&');
