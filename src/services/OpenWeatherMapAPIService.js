@@ -20,6 +20,8 @@ const availableUnitOptions = [
  * @class
  * @classdesc Provides functionality to get Weather Forecast from OpenWeather API.
  * @extends BaseWeatherService
+ *
+ * @author Volodymyr Chumak <coder.ua@gmail.com>
  */
 class OpenWeatherMapAPIService extends BaseWeatherService {
   /**

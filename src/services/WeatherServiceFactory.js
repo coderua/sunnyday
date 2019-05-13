@@ -4,6 +4,9 @@ import OpenWeatherMapAPIService from './OpenWeatherMapAPIService';
 
 /**
  * Factory for creation Weather Service
+ *
+ * @class
+ * @author Volodymyr Chumak <coder.ua@gmail.com>
  */
 class WeatherServiceFactory {
   static create() {

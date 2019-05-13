@@ -4,6 +4,8 @@
  * @class
  * @classdesc Like an abstract class that provides base functionality to
  *            child Weather service classes.
+ *
+ * @author Volodymyr Chumak <coder.ua@gmail.com>
  */
 class BaseWeatherService {
   /**

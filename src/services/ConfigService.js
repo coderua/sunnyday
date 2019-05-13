@@ -107,6 +107,8 @@ let instance = null;
  *
  * @constructor
  * @class
+ *
+ * @author Volodymyr Chumak <coder.ua@gmail.com>
  */
 function ConfigService() {
   if (instance !== null) {
