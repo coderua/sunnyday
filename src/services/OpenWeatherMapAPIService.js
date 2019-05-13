@@ -51,22 +51,15 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
    * @return {Promise<Object | Error>}
    */
   getCurrentWeather(params) {
-    if (!params.q && !(params.lat && params.lon)) {
+    if (!this._isRequiredSearchParamsExist(params)) {
       return Promise.reject(new Error('Please specify the city or location'));
     }
 
-    const query = BaseWeatherService.createQuery({
-      appid: this._apiKey,
-      units: this.#units,
-      ...params,
-    });
-
-    const url = `${this._apiEndpoint}/weather?${query}`;
+    const url = `${this._apiEndpoint}/weather`;
 
     console.log('[OpenWeatherMapAPIService]: Request => ', url);
 
-    return this.httpClient.get(url)
-      .then(response => response.data);
+    return this._request('get', url, params);
   }
 
   /**
@@ -76,9 +69,54 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
    * @return {Promise<Object | Error>}
    */
   getFiveDayWeather(params) {
-    if (!params.q && !(params.lat && params.lon)) {
+    if (!this._isRequiredSearchParamsExist(params)) {
       return Promise.reject(new Error('Please specify the city or location'));
     }
+
+    const url = `${this._apiEndpoint}/forecast`;
+
+    console.log('[OpenWeatherMapAPIService]: Request => ', url);
+
+    return this._request('get', url, params);
+  }
+
+  /**
+   * Checks if City or Latitude and Longitude are present.
+   *
+   * @example params for city
+   * {
+   *   q: 'Warsaw'
+   * }
+   *
+   * @example params for location
+   * {
+   *   lat: 52.2319,
+   *   lon: 21.0067
+   * }
+   *
+   * @param {Object} params
+   * @return {boolean}
+   * @private
+   */
+  _isRequiredSearchParamsExist(params = {}) {
+    return !!(params.q || (params.lat && params.lon));
+  }
+
+  /**
+   *
+   * @param {String} method
+   * @param {String} url
+   * @param {Object} params
+   * @return {Promise<Object | Error>}
+   * @private
+   */
+  _request(method = 'get', url, params = {}) {
+    if (!url) {
+      return Promise.reject(new Error('[OpenWeatherMapAPIService]: Url is required.'));
+    }
+
+    this._checkApiKey(this._apiKey);
+    this._checkHttpClient(this.httpClient);
 
     const query = BaseWeatherService.createQuery({
       appid: this._apiKey,
@@ -86,11 +124,9 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
       ...params,
     });
 
-    const url = `${this._apiEndpoint}/forecast?${query}`;
+    const fullUrl = query ? `${url}?${query}` : url;
 
-    console.log('[OpenWeatherMapAPIService]: Request => ', url);
-
-    return this.httpClient.get(url)
+    return this.httpClient[method](fullUrl)
       .then(response => response.data);
   }
 

@@ -28,7 +28,7 @@ const warn = (...args) => console.warn('[ConfigService]: '.concat(args));
  * Get configuration for the browser's current location
  *
  * @type   {Function}
- * @return {String}           Environment name
+ * @return {String} Environment name
  */
 const getCurrentEnv = () => {
   let environment = 'production';
@@ -60,7 +60,7 @@ const mergeConfig = (options) => {
   const validOptions = [environment, defaults].some(isObject);
 
   if (!validOptions) {
-    warn(['The provided options are incorrect']);
+    warn('The provided options are incorrect');
 
     return {};
   }
@@ -68,9 +68,7 @@ const mergeConfig = (options) => {
   const currentEnv = getCurrentEnv();
 
   if (!environment[currentEnv]) {
-    // Environment configuration does not exist
-    warn('Environment configuration does not exist.');
-
+    // Environment configuration section does not exist
     return defaults;
   }
 
@@ -98,14 +96,14 @@ const getDeepValue = (cfg, path) => {
 };
 
 /**
- * Configuration instance
+ * ConfigService instance
  *
  * @type {ConfigService}
  */
 let instance = null;
 
 /**
- * Configuration constructor
+ * ConfigService constructor
  *
  * @constructor
  * @class
@@ -132,11 +130,11 @@ ConfigService.prototype.install = function install(Vue) {
 /**
  * Returns configuration value by the key.
  *
- * @example for path
- *          'api.base'
- *          'debug'
+ * @example for path param
+ *          'services.openweathermap'
+ *          'services'
  *
- * @example for defaultValue
+ * @example for defaultValue param
  *          {}
  *          []
  *          'some value'
@@ -148,7 +146,7 @@ ConfigService.prototype.install = function install(Vue) {
  */
 ConfigService.prototype.get = function get(path, defaultValue = undefined) {
   if (typeof path !== 'string') {
-    throw new Error(`Expected string key for getting configuration. Got '${typeof path}'`);
+    throw new Error(`Expected string key for getting configuration value. Got '${typeof path}'`);
   }
 
   const configValue = getDeepValue(config, path);
