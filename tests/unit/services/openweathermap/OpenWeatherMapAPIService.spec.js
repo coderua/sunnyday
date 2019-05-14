@@ -1,7 +1,7 @@
-import axios from 'axios';
-import expect from 'expect';
+import axios from 'axios/index';
+import expect from 'expect/build/index';
 import moxios from 'moxios';
-import OpenWeatherMapAPIService from '../../../src/services/OpenWeatherMapAPIService';
+import OpenWeatherMapAPIService from '../../../../src/services/openweathermap/OpenWeatherMapAPIService';
 
 describe('OpenWeatherMapAPIService.js', () => {
   it('creates an instance with default params', () => {

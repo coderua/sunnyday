@@ -1,6 +1,6 @@
 import expect from 'expect';
 import WeatherServiceFactory from '../../../src/services/WeatherServiceFactory';
-import OpenWeatherMapAPIService from '../../../src/services/OpenWeatherMapAPIService';
+import OpenWeatherMapAPIService from '../../../src/services/openweathermap/OpenWeatherMapAPIService';
 
 describe('WeatherServiceFactory.js', () => {
   it('creates OpenWeatherMapAPIService instance without params', () => {

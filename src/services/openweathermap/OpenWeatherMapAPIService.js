@@ -1,17 +1,57 @@
-import BaseWeatherService from './BaseWeatherService';
+import BaseWeatherService from '../BaseWeatherService';
 
 //
 // Symbols for private method names.
 //
 const checkUnits = Symbol('checkUnits');
+const checkLang = Symbol('checkLang');
 
 //
 // Available values for different options.
 //
+
+// Units
 const availableUnitOptions = [
   'standard', // Default value for the
   'metric', // For temperature in Celsius
   'imperial', // For temperature in Fahrenheit
+];
+
+// Supported languages to get output in specified language.
+const supportedLanguages = [
+  'ar', // Arabic
+  'bg', // Bulgarian
+  'ca', // Catalan
+  'cz', // Czech
+  'de', // German
+  'el', // Greek
+  'en', // English
+  'fa', // Persian (Farsi)
+  'fi', // Finnish
+  'fr', // French
+  'gl', // Galician
+  'hr', // Croatian
+  'hu', // Hungarian
+  'it', // Italian
+  'ja', // Japanese
+  'kr', // Korean
+  'la', // Latvian
+  'lt', // Lithuanian
+  'mk', // Macedonian
+  'nl', // Dutch
+  'pl', // Polish
+  'pt', // Portuguese
+  'ro', // Romanian
+  'ru', // Russian
+  'se', // Swedish
+  'sk', // Slovak
+  'sl', // Slovenian
+  'es', // Spanish
+  'tr', // Turkish
+  'ua', // Ukrainian
+  'vi', // Vietnamese
+  'zh_cn', // Chinese Simplified
+  'zh_tw', // Chinese Traditional
 ];
 
 /**
@@ -34,6 +74,14 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
   #units = 'metric';
 
   /**
+   * Lang property used to get the output in specified language.
+   * NOTE: Translation is only applied for the "description" field
+   *
+   * @type {string}
+   */
+  #lang = 'en';
+
+  /**
    * OpenWeatherMapAPIService class constructor.
    *
    * @param {Object} [options={}]
@@ -43,6 +91,10 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
 
     if (options.units) {
       this.#units = options.units;
+    }
+
+    if (options.lang) {
+      this.#lang = options.lang;
     }
   }
 
@@ -123,6 +175,7 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
     const query = BaseWeatherService.createQuery({
       appid: this._apiKey,
       units: this.#units,
+      lang: this.#lang,
       ...params,
     });
 
@@ -137,6 +190,15 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
   //-------
 
   /**
+   * Returns units value.
+   *
+   * @return {string}
+   */
+  get units() {
+    return this.#units;
+  }
+
+  /**
    * Sets units value
    *
    * @param {String} units
@@ -147,13 +209,25 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
     this.#units = units;
   }
 
+
   /**
-   * Returns units value.
+   * Returns lang value.
    *
    * @return {string}
    */
-  get units() {
-    return this.#units;
+  get lang() {
+    return this.#lang;
+  }
+
+  /**
+   * Sets units value
+   *
+   * @param {String} lang
+   */
+  set lang(lang) {
+    this[checkLang](lang);
+
+    this.#lang = lang;
   }
 
   //-------
@@ -170,6 +244,21 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
   [checkUnits](units) {
     if (!units || !availableUnitOptions[units]) {
       throw new Error(`[OpenWeatherMapAPIService]: Invalid units value '${units}'. Available values are: ${availableUnitOptions.join(', ')}`);
+    }
+
+    return this;
+  }
+
+  /**
+   * Checks lang for validity.
+   *
+   * @private
+   * @param {String} lang
+   * @return {OpenWeatherMapAPIService}
+   */
+  [checkLang](lang) {
+    if (!lang || !supportedLanguages[lang]) {
+      throw new Error(`[OpenWeatherMapAPIService]: Invalid lang value '${lang}'. Available values are: ${supportedLanguages.join(', ')}`);
     }
 
     return this;

@@ -1,5 +1,5 @@
 /**
- * WeatherForecast class
+ * WeatherForecast class represent Weather Forecast for specified location.
  *
  * @author Volodymyr Chumak <coder.ua@gmail.com>
  */
@@ -19,23 +19,23 @@ class WeatherForecast {
   #country = '';
 
   /**
-   * Per three hours weather forecast list
+   * Weather forecast list for periods
    *
-   * @type {WeatherForHour[]}
+   * @type {WeatherForPeriod[]}
    */
-  #weatherPerHours = [];
+  #weatherPeriods = [];
 
   /**
    * WeatherForecast constructor
    *
    * @param {String} city
    * @param {String} country
-   * @param {WeatherForHour[]} weatherPerHours
+   * @param {WeatherForPeriod[]} weatherPeriods
    */
-  constructor(city, country, weatherPerHours = []) {
+  constructor(city, country, weatherPeriods = []) {
     this.#city = city;
     this.#country = country;
-    this.#weatherPerHours = [...weatherPerHours];
+    this.#weatherPeriods = [...weatherPeriods];
   }
 
   //-------
@@ -63,10 +63,10 @@ class WeatherForecast {
   /**
    * Weather per hours
    *
-   * @return {WeatherForHour[]}
+   * @return {WeatherForPeriod[]}
    */
-  get weatherPerHours() {
-    return this.#weatherPerHours;
+  get weatherPeriods() {
+    return this.#weatherPeriods;
   }
 
   /**

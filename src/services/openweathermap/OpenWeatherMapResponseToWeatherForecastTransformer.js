@@ -1,0 +1,42 @@
+import WeatherForecast from '../../modules/WeatherForecast';
+import WeatherForPeriod from '../../modules/WeatherForPeriod';
+
+/**
+ * OpenWeatherMapResponseToWeatherForecastTransformer class provide functionality
+ * for transformation responses from OpenWeatherMap service to internal entities.
+ *
+ * @class
+ * @author Volodymyr Chumak <coder.ua@gmail.com>
+ */
+class OpenWeatherMapResponseToWeatherForecastTransformer {
+  /**
+   * Transforms weather forecast response from OpenWeatherMap into application WeatherForecast
+   * with list of WeatherForPeriod classes.
+   *
+   * @static
+   * @param {Object} responseData
+   * @return {WeatherForecast}
+   */
+  static transform(responseData = {}) {
+    const weatherPeriods = responseData.list.map((item) => {
+      const data = {
+        description: item.weather[0].description,
+        dateTime: item.dt,
+        temp: item.main.temp,
+        tempMin: item.main.temp_mix,
+        tempMax: item.main.temp_man,
+        cloudiness: item.clouds.all,
+        windSpeed: item.wind.speed,
+        humidity: item.main.humidity,
+        // @todo implement setting the weather icon independently from any Weather service
+        weatherIcon: '',
+      };
+
+      return new WeatherForPeriod(data);
+    });
+
+    return new WeatherForecast(responseData.city.name, responseData.city.country, weatherPeriods);
+  }
+}
+
+export default OpenWeatherMapResponseToWeatherForecastTransformer;
