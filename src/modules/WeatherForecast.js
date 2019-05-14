@@ -75,7 +75,9 @@ class WeatherForecast {
    * @return {string}
    */
   get location() {
-    return `${this.#city}, ${this.#country}`;
+    return this.#city && this.#country
+      ? `${this.#city}, ${this.#country}`
+      : '';
   }
 }
 
