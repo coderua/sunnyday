@@ -1,5 +1,5 @@
-import WeatherForecast from '../../modules/WeatherForecast';
-import WeatherForPeriod from '../../modules/WeatherForPeriod';
+import WeatherForecast from '../../models/WeatherForecast';
+import WeatherForecastPeriod from '../../models/WeatherForecastPeriod';
 
 /**
  * OpenWeatherMapResponseToWeatherForecastTransformer class provide functionality
@@ -11,13 +11,17 @@ import WeatherForPeriod from '../../modules/WeatherForPeriod';
 class OpenWeatherMapResponseToWeatherForecastTransformer {
   /**
    * Transforms weather forecast response from OpenWeatherMap into application WeatherForecast
-   * with list of WeatherForPeriod classes.
+   * with list of WeatherForecastForPeriod classes.
    *
    * @static
    * @param {Object} responseData
    * @return {WeatherForecast}
    */
   static transform(responseData = {}) {
+    if (!responseData || typeof responseData !== 'object' || !Object.keys(responseData).length) {
+      throw new Error('[OpenWeatherMapResponseToWeatherForecastTransformer]: Empty response data.');
+    }
+
     const weatherPeriods = responseData.list.map((item) => {
       const data = {
         description: item.weather[0].description,
@@ -32,7 +36,7 @@ class OpenWeatherMapResponseToWeatherForecastTransformer {
         weatherIcon: '',
       };
 
-      return new WeatherForPeriod(data);
+      return new WeatherForecastPeriod(data);
     });
 
     return new WeatherForecast(responseData.city.name, responseData.city.country, weatherPeriods);

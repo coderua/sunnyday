@@ -1,13 +1,13 @@
 import expect from 'expect';
-import WeatherForPeriod from '../../../src/modules/WeatherForPeriod';
+import WeatherForecastPeriod from '../../../src/models/WeatherForecastPeriod';
 
-describe('WeatherForPeriod.js', () => {
-  it('creates WeatherForPeriod instance wo/ data', () => {
+describe('WeatherForecastPeriod.js', () => {
+  it('creates WeatherForecastPeriod instance wo/ data', () => {
     // Arrangement
-    const weatherForHour = new WeatherForPeriod();
+    const weatherForHour = new WeatherForecastPeriod();
 
     // Assertion
-    expect(weatherForHour).toBeInstanceOf(WeatherForPeriod);
+    expect(weatherForHour).toBeInstanceOf(WeatherForecastPeriod);
     expect(weatherForHour.description).toBe('');
     expect(weatherForHour.dateTime).toBe(0);
     expect(weatherForHour.cloudiness).toBe(0);
@@ -17,9 +17,10 @@ describe('WeatherForPeriod.js', () => {
     expect(weatherForHour.tempMin).toBe(0);
     expect(weatherForHour.tempMax).toBe(0);
     expect(weatherForHour.weatherIcon).toBe('');
+    expect(weatherForHour.condition).toBe('');
   });
 
-  it('creates WeatherForPeriod instance with data', () => {
+  it('creates WeatherForecastPeriod instance with data', () => {
     // Arrangement data from response
     const data = {
       description: 'light rain',
@@ -30,14 +31,15 @@ describe('WeatherForPeriod.js', () => {
       cloudiness: 100,
       windSpeed: 4.88,
       humidity: 9.05,
+      condition: 800,
       weatherIcon: 'some-icon.svg',
     };
 
     // Action
-    const weatherForHour = new WeatherForPeriod(data);
+    const weatherForHour = new WeatherForecastPeriod(data);
 
     // Assertion
-    expect(weatherForHour).toBeInstanceOf(WeatherForPeriod);
+    expect(weatherForHour).toBeInstanceOf(WeatherForecastPeriod);
     expect(weatherForHour.description).toBe('light rain');
     expect(weatherForHour.dateTime).toBe(1557846000);
     expect(weatherForHour.temp).toBe(9);
@@ -46,5 +48,6 @@ describe('WeatherForPeriod.js', () => {
     expect(weatherForHour.cloudiness).toBe(100);
     expect(weatherForHour.humidity).toBe(9.05);
     expect(weatherForHour.weatherIcon).toBe('some-icon.svg');
+    expect(weatherForHour.condition).toBe(800);
   });
 });

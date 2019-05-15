@@ -14,7 +14,7 @@
 /**
  * Search City field
  *
- * Custom tag `<search-city-field />`
+ * Custom tag `<search-field />`
  *
  * @vuedoc
  * @emits searchByCity
@@ -22,7 +22,7 @@
  * @exports views/SearchCityField
  */
 export default {
-  name: 'SearchCityField',
+  name: 'SearchField',
   data() {
     return {
       query: '',

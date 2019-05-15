@@ -27,6 +27,14 @@ module.exports = {
       js: 'never',
       vue: 'never'
     }],
+    'max-len': [
+      'error',
+      {
+        'code': 120,
+        'ignoreComments': true,
+        'ignorePattern': '(\\$t\\()|(:ref=")|(class=")|(^import.*)',
+      }
+    ],
   },
   parserOptions: {
     parser: 'babel-eslint',

@@ -1,12 +1,13 @@
 /**
- * WeatherForHour class represents weather for a three hours time period.
+ * WeatherForecastPeriod class represents weather for some hours time period (three hours for example).
  *
  * @author Volodymyr Chumak <coder.ua@gmail.com>
  */
-class WeatherForPeriod {
+class WeatherForecastPeriod {
   /**
    * Weather description
    *
+   * @private
    * @type {string}
    */
   #description = '';
@@ -14,6 +15,7 @@ class WeatherForPeriod {
   /**
    * Date and time as unix time stamp (seconds)
    *
+   * @private
    * @type {number}
    */
   #dateTime = 0;
@@ -21,6 +23,7 @@ class WeatherForPeriod {
   /**
    * Cloudiness level (%)
    *
+   * @private
    * @type {number}
    */
   #cloudiness = 0;
@@ -28,6 +31,7 @@ class WeatherForPeriod {
   /**
    * Wind speed (meter/sec)
    *
+   * @private
    * @type {number}
    */
   #windSpeed = 0;
@@ -35,6 +39,7 @@ class WeatherForPeriod {
   /**
    * Humidity level (%)
    *
+   * @private
    * @type {number}
    */
   #humidity = 0;
@@ -42,6 +47,7 @@ class WeatherForPeriod {
   /**
    * Temperature (Kelvin, Celsius, Fahrenheit)
    *
+   * @private
    * @type {number}
    */
   #temp = 0;
@@ -49,6 +55,7 @@ class WeatherForPeriod {
   /**
    * Minimum temperature at the moment (Kelvin, Celsius, Fahrenheit)
    *
+   * @private
    * @type {number}
    */
   #tempMin = 0;
@@ -56,6 +63,7 @@ class WeatherForPeriod {
   /**
    * Maximum temperature at the moment (Kelvin, Celsius, Fahrenheit)
    *
+   * @private
    * @type {number}
    */
   #tempMax = 0;
@@ -63,9 +71,18 @@ class WeatherForPeriod {
   /**
    * Weather icon
    *
+   * @private
    * @type {string}
    */
   #weatherIcon = '';
+
+  /**
+   * Weather condition: Thunderstorm, Drizzle, Rain, Snow, Atmosphere, Clear, Clouds
+   *
+   * @private
+   * @type {Number|String}
+   */
+  #condition = '';
 
   /**
    *
@@ -79,7 +96,7 @@ class WeatherForPeriod {
    * Populate property values from a passed data
    *
    * @param {Object} data
-   * @return {WeatherForPeriod}
+   * @return {WeatherForecastPeriod}
    */
   populate(data = {}) {
     Object.keys(data).forEach((field) => {
@@ -87,6 +104,35 @@ class WeatherForPeriod {
     });
 
     return this;
+  }
+
+  /**
+   * Returns data as a POJO.
+   *
+   * @return {{dateTime: number, tempMax: number, temp: number, weatherIcon: string, description: string, humidity: number, cloudiness: number, windSpeed: number, tempMin: number}}
+   */
+  getData() {
+    return {
+      description: this.#description,
+      dateTime: this.#dateTime,
+      temp: this.#temp,
+      tempMin: this.#tempMin,
+      tempMax: this.#tempMax,
+      cloudiness: this.#cloudiness,
+      windSpeed: this.#windSpeed,
+      humidity: this.#humidity,
+      weatherIcon: this.#weatherIcon,
+      condition: this.#condition,
+    };
+  }
+
+  /**
+   * Returns day number
+   *
+   * @return {number}
+   */
+  getDay() {
+    return new Date(this.#dateTime * 1000).getUTCDay();
   }
 
   //-------
@@ -164,6 +210,14 @@ class WeatherForPeriod {
   set weatherIcon(value) {
     this.#weatherIcon = value;
   }
+
+  get condition() {
+    return this.#condition;
+  }
+
+  set condition(value) {
+    this.#condition = value;
+  }
 }
 
-export default WeatherForPeriod;
+export default WeatherForecastPeriod;

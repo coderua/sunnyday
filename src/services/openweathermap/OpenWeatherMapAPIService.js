@@ -1,4 +1,8 @@
 import BaseWeatherService from '../BaseWeatherService';
+import WeatherForecast from '../../models/WeatherForecast';
+import OpenWeatherMapResponseToWeatherForecastTransformer
+  from './OpenWeatherMapResponseToWeatherForecastTransformer';
+import forecastWarsawResponseJson from '../../../tests/unit/fixtures/forecast-Warsaw-response';
 
 //
 // Symbols for private method names.
@@ -120,7 +124,7 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
    * Returns five days forecast.
    *
    * @param {Object} params
-   * @return {Promise<Object | Error>}
+   * @return {Promise<WeatherForecast | Error>}
    */
   getFiveDayWeather(params) {
     if (!this._isRequiredSearchParamsExist(params)) {
@@ -131,7 +135,10 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
 
     console.log('[OpenWeatherMapAPIService]: Request => ', url);
 
-    return this._request('get', url, params);
+    return this._request('get', url, params)
+      .then((weatherForecastJson) => {
+        return OpenWeatherMapResponseToWeatherForecastTransformer.transform(weatherForecastJson);
+      });
   }
 
   /**

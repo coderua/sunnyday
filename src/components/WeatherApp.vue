@@ -1,13 +1,20 @@
 <template>
-  <search-city-field
-    @searchByCity="fetchWeather"
-    @searchByLocation="fetchByLocation"
-  />
+  <div>
+    <search-field
+      @searchByCity="fetchWeather"
+      @searchByLocation="fetchByLocation"
+    />
+
+    <weather-forecast-days
+      v-if="loaded"
+      :periods="weatherForecast.weatherForecastPeriodList" />
+  </div>
 </template>
 
 <script>
 import WeatherServiceFactory from '../services/WeatherServiceFactory';
-import SearchCityField from './SearchCityField';
+import SearchField from './SearchField';
+import WeatherForecastDays from './WeatherForecastDays';
 
 const weatherService = WeatherServiceFactory.create();
 
@@ -24,13 +31,18 @@ const weatherService = WeatherServiceFactory.create();
 export default {
   name: 'WeatherApp',
   components: {
-    SearchCityField,
+    WeatherForecastDays,
+    SearchField,
   },
   data() {
     return {
       city: 'Warsaw',
       currentWeather: null,
-      fiveDayWeather: {},
+      /*
+       * @type {WeatherForecast}
+       */
+      weatherForecast: {},
+      loaded: false,
     };
   },
   created() {
@@ -45,15 +57,11 @@ export default {
       }
     },
     fetchWeather(params) {
-      Promise.all([
-        // Get current weather for the location
-        weatherService.getCurrentWeather(params),
-        // Get five days forecast for the location
-        weatherService.getFiveDayWeather(params),
-      ])
-        .then(([currentWeather, fiveDayWeather]) => {
-          this.currentWeather = currentWeather;
-          this.fiveDayWeather = fiveDayWeather;
+      // Get five days forecast for the location
+      weatherService.getFiveDayWeather(params)
+        .then((weatherForecast) => {
+          this.weatherForecast = weatherForecast;
+          this.loaded = true;
         })
         .catch((err) => {
           console.error(err);

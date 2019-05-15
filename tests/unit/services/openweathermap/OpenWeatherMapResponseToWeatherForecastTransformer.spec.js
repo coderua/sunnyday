@@ -1,9 +1,10 @@
 import expect from 'expect/build/index';
-import WeatherForecast from '../../../../src/modules/WeatherForecast';
+import WeatherForecast from '../../../../src/models/WeatherForecast';
 import OpenWeatherMapResponseToWeatherForecastTransformer
   from '../../../../src/services/openweathermap/OpenWeatherMapResponseToWeatherForecastTransformer';
-import WeatherForPeriod from '../../../../src/modules/WeatherForPeriod';
+import WeatherForecastPeriod from '../../../../src/models/WeatherForecastPeriod';
 import forecastWarsawResponseJson from '../../fixtures/forecast-Warsaw-response.json';
+import WeatherForecastPeriodList from '../../../../src/models/WeatherForecastPeriodList';
 
 describe('OpenWeatherMapResponseToWeatherForecastTransformer.js', () => {
   it('transforms OpenWeatherMap API Response into WeatherForecast', () => {
@@ -16,11 +17,32 @@ describe('OpenWeatherMapResponseToWeatherForecastTransformer.js', () => {
     expect(forecast.city).toBe('Warsaw');
     expect(forecast.country).toBe('PL');
     expect(forecast.location).toBe('Warsaw, PL');
-    expect(forecast.weatherPeriods).toBeInstanceOf(Array);
-    expect(forecast.weatherPeriods.length).toBe(40);
+    expect(forecast.weatherForecastPeriodList).toBeInstanceOf(WeatherForecastPeriodList);
+    expect(forecast.weatherForecastPeriodList.length).toBe(40);
 
-    for (let i = 0, len = forecast.weatherPeriods.length; i < len; i += 1) {
-      expect(forecast.weatherPeriods[i]).toBeInstanceOf(WeatherForPeriod);
+    for (const weatherForecastPeriod of forecast.weatherForecastPeriodList.items) {
+      expect(weatherForecastPeriod).toBeInstanceOf(WeatherForecastPeriod);
     }
+  });
+
+  it('can not transforms empty OpenWeatherMap API Response into WeatherForecast', () => {
+    // Action && Assertion
+    expect(() => OpenWeatherMapResponseToWeatherForecastTransformer.transform())
+      .toThrow(/Empty response data/);
+
+    expect(() => OpenWeatherMapResponseToWeatherForecastTransformer.transform({}))
+      .toThrow(/Empty response data/);
+
+    expect(() => OpenWeatherMapResponseToWeatherForecastTransformer.transform(null))
+      .toThrow(/Empty response data/);
+
+    expect(() => OpenWeatherMapResponseToWeatherForecastTransformer.transform(''))
+      .toThrow(/Empty response data/);
+
+    expect(() => OpenWeatherMapResponseToWeatherForecastTransformer.transform(123))
+      .toThrow(/Empty response data/);
+
+    expect(() => OpenWeatherMapResponseToWeatherForecastTransformer.transform(() => {}))
+      .toThrow(/Empty response data/);
   });
 });
