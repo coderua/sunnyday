@@ -113,8 +113,8 @@ class WeatherForecastPeriod {
    */
   getData() {
     return {
-      description: this.#description,
       dateTime: this.#dateTime,
+      description: this.#description,
       temp: this.#temp,
       tempMin: this.#tempMin,
       tempMax: this.#tempMax,
@@ -124,15 +124,6 @@ class WeatherForecastPeriod {
       weatherIcon: this.#weatherIcon,
       condition: this.#condition,
     };
-  }
-
-  /**
-   * Returns day number
-   *
-   * @return {number}
-   */
-  getDay() {
-    return new Date(this.#dateTime * 1000).getUTCDay();
   }
 
   //-------
@@ -217,6 +208,15 @@ class WeatherForecastPeriod {
 
   set condition(value) {
     this.#condition = value;
+  }
+
+  /**
+   * Returns the day of the week according to local time
+   *
+   * @return {number}
+   */
+  get day() {
+    return new Date(this.#dateTime * 1000).getDay();
   }
 }
 

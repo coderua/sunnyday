@@ -107,7 +107,7 @@ class WeatherForecast {
       return;
     }
 
-    throw new Error(`[WeatherForecastHoursList]: Invalid periods type. Expected 'Array' of 'WeatherForecastPeriod' instances got ${typeof periods}`);
+    throw new Error(`[WeatherForecastHoursList]: Invalid periods type. Expected 'Array' of 'WeatherForecastPeriod' instances got ${typeof value}`);
   }
 
   /**

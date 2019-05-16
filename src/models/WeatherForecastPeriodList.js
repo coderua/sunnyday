@@ -25,6 +25,29 @@ class WeatherForecastPeriodList {
   }
 
   /**
+   * Adds WeatherForecastPeriod to a list.
+   *
+   * @param {WeatherForecastPeriod} weatherForecastPeriod
+   * @return {WeatherForecastPeriodList}
+   */
+  add(weatherForecastPeriod) {
+    this.#items.push(weatherForecastPeriod);
+
+    return this;
+  }
+
+  /**
+   * Sorts the collection by Date.
+   *
+   * @return {WeatherForecastPeriodList}
+   */
+  sortByDate() {
+    this.#items = this.#items.sort((a, b) => a.dateTime - b.dateTime);
+
+    return this;
+  }
+
+  /**
    *
    * @return WeatherForecastPeriodList
    */
@@ -60,65 +83,57 @@ class WeatherForecastPeriodList {
      * Average Weather Forecast Period data
      *
      * @param {Object} periodData
-     * @param {Number} mergedFromPeriodsCount
+     * @param {Number} dailyWeatherPeriods
      * @return {Object}
      */
-    const averagePeriod = (periodData, mergedFromPeriodsCount) => {
+    const averagePeriod = (periodData, dailyWeatherPeriods) => {
       const result = {
         dateTime: periodData.dateTime,
-        temp: Math.round(periodData.temp / mergedFromPeriodsCount),
-        tempMin: Math.round(periodData.tempMin / mergedFromPeriodsCount),
-        tempMax: Math.round(periodData.tempMax / mergedFromPeriodsCount),
-        cloudiness: Math.round(periodData.cloudiness / mergedFromPeriodsCount),
-        windSpeed: Math.round(periodData.windSpeed / mergedFromPeriodsCount),
-        humidity: Math.round(periodData.humidity / mergedFromPeriodsCount),
-        condition: Math.round(periodData.condition / mergedFromPeriodsCount),
+        temp: Math.round(periodData.temp / dailyWeatherPeriods),
+        tempMin: Math.round(periodData.tempMin / dailyWeatherPeriods),
+        tempMax: Math.round(periodData.tempMax / dailyWeatherPeriods),
+        cloudiness: Math.round(periodData.cloudiness / dailyWeatherPeriods),
+        windSpeed: Math.round(periodData.windSpeed / dailyWeatherPeriods),
+        humidity: Math.round(periodData.humidity / dailyWeatherPeriods),
+        condition: Math.round(periodData.condition / dailyWeatherPeriods),
         weatherIcon: periodData.weatherIcon,
       };
 
       return result;
     };
 
-    // getWeatherIcon(period)
-
     // Accumulator for daily Weather Forecasts
     const dailyWeatherPeriods = {};
 
     this.#items.forEach((period) => {
-      const day = String(period.getDay());
+      const day = String(period.day);
 
       if (dailyWeatherPeriods[day]) {
         // Merge periods with existent one
-        dailyWeatherPeriods[day].sum = sumPeriodsData(dailyWeatherPeriods[day].sum, period.getData());
-        dailyWeatherPeriods[day].periods += 1;
+        dailyWeatherPeriods[day].approxWeather = sumPeriodsData(
+          dailyWeatherPeriods[day].approxWeather,
+          period.getData(),
+        );
+        dailyWeatherPeriods[day].periodsCount += 1;
       } else {
         // Add new period
         dailyWeatherPeriods[day] = {
-          sum: period.getData(),
-          periods: 1,
+          approxWeather: period.getData(),
+          periodsCount: 1,
         };
       }
     });
 
     for (const day in dailyWeatherPeriods) {
-      const dailyAveragePeriod = averagePeriod(dailyWeatherPeriods[day].sum, dailyWeatherPeriods[day].periods);
+      const dailyAveragePeriod = averagePeriod(
+        dailyWeatherPeriods[day].approxWeather,
+        dailyWeatherPeriods[day].periodsCount,
+      );
 
       result.add(new WeatherForecastPeriod(dailyAveragePeriod));
     }
 
-    return result;
-  }
-
-  /**
-   * Adds WeatherForecastPeriod to a list.
-   *
-   * @param {WeatherForecastPeriod} weatherForecastPeriod
-   * @return {WeatherForecastPeriodList}
-   */
-  add(weatherForecastPeriod) {
-    this.#items.push(weatherForecastPeriod);
-
-    return this;
+    return result.sortByDate();
   }
 
   //-------

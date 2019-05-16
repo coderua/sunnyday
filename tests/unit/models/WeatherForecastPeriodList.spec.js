@@ -1,6 +1,9 @@
 import expect from 'expect';
 import WeatherForecastPeriod from '../../../src/models/WeatherForecastPeriod';
 import WeatherForecastPeriodList from '../../../src/models/WeatherForecastPeriodList';
+import forecastWarsawResponseJson from '../fixtures/forecast-Warsaw-response.json';
+import OpenWeatherMapResponseToWeatherForecastTransformer
+  from '../../../src/services/openweathermap/OpenWeatherMapResponseToWeatherForecastTransformer';
 
 describe('WeatherForecastPeriodList.js', () => {
   it('creates WeatherForecastPeriodList instance wo/ data', () => {
@@ -65,7 +68,7 @@ describe('WeatherForecastPeriodList.js', () => {
       .toThrow(/Invalid periods type/);
   });
 
-  it.only('creates approximate daily WeatherForecastPeriodList', () => {
+  it('creates approximate daily WeatherForecastPeriodList', () => {
     // Arrangement data from response
     const data = [
       // 2019-05-14 12:00:00 UTC
@@ -166,7 +169,19 @@ describe('WeatherForecastPeriodList.js', () => {
     // Action && Assertion
     expect(approximateWeatherForecast).toBeInstanceOf(WeatherForecastPeriodList);
     expect(approximateWeatherForecast.length).toBe(2);
-    approximateWeatherForecast.items.forEach(per => console.log(per.getData()));
+  });
 
+  it('creates approximate daily WeatherForecastPeriodList from response', () => {
+    // Arrangement data from response
+    const forecast = OpenWeatherMapResponseToWeatherForecastTransformer
+      .transform(forecastWarsawResponseJson);
+
+    // Action
+    const { weatherForecastPeriodList } = forecast;
+    const approximateWeatherForecast = weatherForecastPeriodList.getApproximateDaysWeatherForecast();
+
+    // Assertion
+    expect(approximateWeatherForecast).toBeInstanceOf(WeatherForecastPeriodList);
+    expect(approximateWeatherForecast.length).toBe(6);
   });
 });

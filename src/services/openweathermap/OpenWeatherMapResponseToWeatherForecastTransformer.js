@@ -22,22 +22,25 @@ class OpenWeatherMapResponseToWeatherForecastTransformer {
       throw new Error('[OpenWeatherMapResponseToWeatherForecastTransformer]: Empty response data.');
     }
 
-    const weatherPeriods = responseData.list.map((item) => {
-      const data = {
-        description: item.weather[0].description,
-        dateTime: item.dt,
-        temp: item.main.temp,
-        tempMin: item.main.temp_mix,
-        tempMax: item.main.temp_man,
-        cloudiness: item.clouds.all,
-        windSpeed: item.wind.speed,
-        humidity: item.main.humidity,
-        // @todo implement setting the weather icon independently from any Weather service
-        weatherIcon: '',
-      };
+    const weatherPeriods = responseData.list
+      .map((item) => {
+        const data = {
+          description: item.weather[0].description,
+          dateTime: item.dt,
+          temp: item.main.temp,
+          tempMin: item.main.temp_min,
+          tempMax: item.main.temp_max,
+          cloudiness: item.clouds.all,
+          windSpeed: item.wind.speed,
+          humidity: item.main.humidity,
+          // @todo implement setting the weather icon independently from any Weather service
+          weatherIcon: '',
+          condition: item.weather[0].id,
+        };
 
-      return new WeatherForecastPeriod(data);
-    });
+        return new WeatherForecastPeriod(data);
+      })
+      .sort((a, b) => a.dateTime - b.dateTime);
 
     return new WeatherForecast(responseData.city.name, responseData.city.country, weatherPeriods);
   }
