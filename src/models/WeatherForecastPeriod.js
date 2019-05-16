@@ -1,9 +1,22 @@
+import getUnit from '../helpers/get-unit';
+
 /**
  * WeatherForecastPeriod class represents weather for some hours time period (three hours for example).
  *
  * @author Volodymyr Chumak <coder.ua@gmail.com>
  */
 class WeatherForecastPeriod {
+  /**
+   * Units type.
+   *
+   * @example
+   * metric
+   * imperial
+   *
+   * @type {string}
+   */
+  #units = 'metric';
+
   /**
    * Weather description
    *
@@ -210,13 +223,43 @@ class WeatherForecastPeriod {
     this.#condition = value;
   }
 
+  get units() {
+    return this.#units;
+  }
+
+  set units(value) {
+    this.#units = value;
+  }
+
+  /**
+   * Returns Date instance for a period.
+   *
+   * @return {Date}
+   */
+  get date() {
+    return new Date(this.#dateTime * 1000);
+  }
+
   /**
    * Returns the day of the week according to local time
    *
    * @return {number}
    */
   get day() {
-    return new Date(this.#dateTime * 1000).getDay();
+    return this.date.getDay();
+  }
+
+  /**
+   * Returns temperature unit.
+   *
+   * @example
+   * 'C'
+   * 'F'
+   *
+   * @return {String}
+   */
+  get temperatureUnit() {
+    return getUnit(this.#units, 'temperature');
   }
 }
 

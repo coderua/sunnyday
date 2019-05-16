@@ -1,7 +1,9 @@
 <template>
   <div class="weather-forecast-days">
-    Date {{ date }}
-    Temperature {{ weatherForecast.temp }}
+    <div class="weather-forecast-days__day-name">{{ dayName }}</div>
+    <i :class="[weather.weatherIcon]"></i>
+    <div class="weather-forecast-days__temp-max">{{ weather.tempMax }}&deg; {{ weather.temperatureUnit }}</div>
+    <div class="weather-forecast-days__temp-min">{{ weather.tempMin }}&deg; {{ weather.temperatureUnit }}</div>
   </div>
 </template>
 
@@ -14,15 +16,16 @@
  * @vuedoc
  * @exports components/WeatherForecastDayThumb
  */
-import WeatherForecast from '../models/WeatherForecast';
+import formattedDate from '../helpers/formatted-date';
+import WeatherForecastPeriod from '../models/WeatherForecastPeriod';
 
 export default {
   name: 'WeatherForecastDayThumb',
   props: {
-    weatherForecast: {
+    weather: {
       type: Object,
       required: true,
-      default: () => new WeatherForecast(),
+      default: () => new WeatherForecastPeriod(),
     },
     day: {
       type: Number,
@@ -30,13 +33,25 @@ export default {
     },
   },
   computed: {
-    date() {
-      return (new Date(this.weatherForecast.dateTime * 1000)).toDateString();
+    dayName() {
+      return formattedDate(this.weather.date, { weekday: 'short' });
     },
   },
 };
 </script>
 
 <style scoped>
+  .weather-forecast-days {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 
+  .weather-forecast-days__temp-max {
+    color: #924da3;
+  }
+
+  .weather-forecast-days__temp-min {
+    color: #3f76fe;
+  }
 </style>

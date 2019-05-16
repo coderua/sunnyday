@@ -1,5 +1,6 @@
 import WeatherForecast from '../../models/WeatherForecast';
 import WeatherForecastPeriod from '../../models/WeatherForecastPeriod';
+import getIconClassName from './get-icon-class-name';
 
 /**
  * OpenWeatherMapResponseToWeatherForecastTransformer class provide functionality
@@ -15,9 +16,10 @@ class OpenWeatherMapResponseToWeatherForecastTransformer {
    *
    * @static
    * @param {Object} responseData
+   * @param {String} [units=metric]
    * @return {WeatherForecast}
    */
-  static transform(responseData = {}) {
+  static transform(responseData = {}, units = 'metric') {
     if (!responseData || typeof responseData !== 'object' || !Object.keys(responseData).length) {
       throw new Error('[OpenWeatherMapResponseToWeatherForecastTransformer]: Empty response data.');
     }
@@ -25,6 +27,7 @@ class OpenWeatherMapResponseToWeatherForecastTransformer {
     const weatherPeriods = responseData.list
       .map((item) => {
         const data = {
+          units,
           description: item.weather[0].description,
           dateTime: item.dt,
           temp: item.main.temp,
@@ -33,8 +36,7 @@ class OpenWeatherMapResponseToWeatherForecastTransformer {
           cloudiness: item.clouds.all,
           windSpeed: item.wind.speed,
           humidity: item.main.humidity,
-          // @todo implement setting the weather icon independently from any Weather service
-          weatherIcon: '',
+          weatherIcon: getIconClassName(item.weather[0].id, item.sys.pod),
           condition: item.weather[0].id,
         };
 
@@ -42,7 +44,7 @@ class OpenWeatherMapResponseToWeatherForecastTransformer {
       })
       .sort((a, b) => a.dateTime - b.dateTime);
 
-    return new WeatherForecast(responseData.city.name, responseData.city.country, weatherPeriods);
+    return new WeatherForecast(responseData.city.name, responseData.city.country, weatherPeriods, units);
   }
 }
 

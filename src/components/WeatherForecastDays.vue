@@ -2,19 +2,19 @@
   <div class="weather-forecast-days">
       <weather-forecast-day-thumb
         v-for="forecast in dailyForecasts"
-        :weather-forecast="forecast"
+        :weather="forecast"
       />
   </div>
 </template>
 
 <script>
 /**
- * WeatherDays component shows weather forecast days list.
+ * WeatherForecastDays component shows weather forecast days list.
  *
  * Custom tag `<weather-forecast-days />`
  *
  * @vuedoc
- * @exports components/WeatherDays
+ * @exports components/WeatherForecastDays
  */
 import WeatherForecast from '../models/WeatherForecast';
 import WeatherForecastDayThumb from './WeatherForecastDayThumb';
@@ -42,5 +42,8 @@ export default {
 </script>
 
 <style scoped>
-
+  .weather-forecast-days {
+    display: flex;
+    justify-content: space-around;
+  }
 </style>

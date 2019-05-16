@@ -2,6 +2,8 @@
  * Application configuration
  *
  * @type {Object}
+ *
+ * @author Volodymyr Chumak <coder.ua@gmail.com>
  */
 const config = {
   defaults: {

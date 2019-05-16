@@ -4,6 +4,7 @@
         v-model="query"
         name="search"
         type="search"
+        placeholder="Enter location"
       />
       <button>Search</button>
       <button type="button" @click="searchByLocation">Current location</button>
@@ -33,9 +34,7 @@ export default {
       const query = this.query.trim();
 
       if (query.length === 0) {
-        // Empty query: searching by current location.
-        this.searchByLocation();
-
+        // Empty query: nothing to search
         return;
       }
 

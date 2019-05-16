@@ -1,18 +1,16 @@
 import BaseWeatherService from '../BaseWeatherService';
-import WeatherForecast from '../../models/WeatherForecast';
 import OpenWeatherMapResponseToWeatherForecastTransformer
   from './OpenWeatherMapResponseToWeatherForecastTransformer';
-import forecastWarsawResponseJson from '../../../tests/unit/fixtures/forecast-Warsaw-response';
 
-//
+//-------
 // Symbols for private method names.
-//
+//-------
 const checkUnits = Symbol('checkUnits');
 const checkLang = Symbol('checkLang');
 
-//
+//-------
 // Available values for different options.
-//
+//-------
 
 // Units
 const availableUnitOptions = [

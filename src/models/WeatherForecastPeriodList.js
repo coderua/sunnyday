@@ -1,4 +1,6 @@
 import WeatherForecastPeriod from './WeatherForecastPeriod';
+import getIconClassNameByApproxCondition
+  from '../services/openweathermap/get-icon-class-name-by-approx-condition';
 
 /**
  * WeatherForecastHoursList is a collection class
@@ -48,6 +50,11 @@ class WeatherForecastPeriodList {
   }
 
   /**
+   * Returns Approximate Daily Weather Forecast.
+   * Used if a Weather service does not provide daily weather forecast.
+   *
+   * Iterate each hourly period and calculate one average value for the next properties:
+   * temp, tempMin, tempMax, cloudiness, windSpeed, humidity, condition, weatherIcon.
    *
    * @return WeatherForecastPeriodList
    */
@@ -59,25 +66,24 @@ class WeatherForecastPeriodList {
     }
 
     /**
-     * Sums two Weather cast periods
+     * Sums two Weather cast periods.
      *
      * @param {Object} prevPeriod
      * @param {Object} newPeriod
      * @return {Object}
      */
-    const sumPeriodsData = (prevPeriod, newPeriod) => {
-      return {
-        dateTime: prevPeriod.dateTime,
-        temp: prevPeriod.temp + newPeriod.temp,
-        tempMin: prevPeriod.tempMin + newPeriod.tempMin,
-        tempMax: prevPeriod.tempMax + newPeriod.tempMax,
-        cloudiness: prevPeriod.cloudiness + newPeriod.cloudiness,
-        windSpeed: prevPeriod.windSpeed + newPeriod.windSpeed,
-        humidity: prevPeriod.humidity + newPeriod.humidity,
-        condition: prevPeriod.condition + newPeriod.condition,
-        weatherIcon: '',
-      };
-    };
+    const sumPeriodsData = (prevPeriod, newPeriod) => ({
+      units: prevPeriod.units,
+      dateTime: prevPeriod.dateTime,
+      temp: prevPeriod.temp + newPeriod.temp,
+      tempMin: prevPeriod.tempMin + newPeriod.tempMin,
+      tempMax: prevPeriod.tempMax + newPeriod.tempMax,
+      cloudiness: prevPeriod.cloudiness + newPeriod.cloudiness,
+      windSpeed: prevPeriod.windSpeed + newPeriod.windSpeed,
+      humidity: prevPeriod.humidity + newPeriod.humidity,
+      condition: prevPeriod.condition + newPeriod.condition,
+      weatherIcon: '',
+    });
 
     /**
      * Average Weather Forecast Period data
@@ -86,21 +92,18 @@ class WeatherForecastPeriodList {
      * @param {Number} dailyWeatherPeriods
      * @return {Object}
      */
-    const averagePeriod = (periodData, dailyWeatherPeriods) => {
-      const result = {
-        dateTime: periodData.dateTime,
-        temp: Math.round(periodData.temp / dailyWeatherPeriods),
-        tempMin: Math.round(periodData.tempMin / dailyWeatherPeriods),
-        tempMax: Math.round(periodData.tempMax / dailyWeatherPeriods),
-        cloudiness: Math.round(periodData.cloudiness / dailyWeatherPeriods),
-        windSpeed: Math.round(periodData.windSpeed / dailyWeatherPeriods),
-        humidity: Math.round(periodData.humidity / dailyWeatherPeriods),
-        condition: Math.round(periodData.condition / dailyWeatherPeriods),
-        weatherIcon: periodData.weatherIcon,
-      };
-
-      return result;
-    };
+    const getAveragePeriodData = (periodData, dailyWeatherPeriods) => ({
+      dateTime: periodData.dateTime,
+      units: periodData.units,
+      temp: Math.round(periodData.temp / dailyWeatherPeriods),
+      tempMin: Math.round(periodData.tempMin / dailyWeatherPeriods),
+      tempMax: Math.round(periodData.tempMax / dailyWeatherPeriods),
+      cloudiness: Math.round(periodData.cloudiness / dailyWeatherPeriods),
+      windSpeed: Math.round(periodData.windSpeed / dailyWeatherPeriods),
+      humidity: Math.round(periodData.humidity / dailyWeatherPeriods),
+      condition: Math.round(periodData.condition / dailyWeatherPeriods),
+      weatherIcon: getIconClassNameByApproxCondition(Math.round(periodData.condition / dailyWeatherPeriods)),
+    });
 
     // Accumulator for daily Weather Forecasts
     const dailyWeatherPeriods = {};
@@ -125,7 +128,7 @@ class WeatherForecastPeriodList {
     });
 
     for (const day in dailyWeatherPeriods) {
-      const dailyAveragePeriod = averagePeriod(
+      const dailyAveragePeriod = getAveragePeriodData(
         dailyWeatherPeriods[day].approxWeather,
         dailyWeatherPeriods[day].periodsCount,
       );

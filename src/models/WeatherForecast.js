@@ -7,6 +7,17 @@ import WeatherForecastPeriodList from './WeatherForecastPeriodList';
  */
 class WeatherForecast {
   /**
+   * Units type.
+   *
+   * @example
+   * metric
+   * imperial
+   *
+   * @type {string}
+   */
+  #units = 'metric';
+
+  /**
    * City name
    *
    * @type {String}
@@ -33,10 +44,12 @@ class WeatherForecast {
    * @param {String} city
    * @param {String} country
    * @param {WeatherForecastPeriod[]|WeatherForecastPeriodList} weatherForecastPeriodList
+   * @param {String} [units=metric]
    */
-  constructor(city = '', country = '', weatherForecastPeriodList = []) {
+  constructor(city = '', country = '', weatherForecastPeriodList = [], units = 'metric') {
     this.#city = city;
     this.#country = country;
+    this.#units = units;
     this.weatherForecastPeriodList = weatherForecastPeriodList;
   }
 
@@ -119,6 +132,15 @@ class WeatherForecast {
     return this.#city && this.#country
       ? `${this.#city}, ${this.#country}`
       : '';
+  }
+
+  /**
+   * Returns units type.
+   *
+   * @return {string}
+   */
+  get units() {
+    return this.#units;
   }
 }
 
