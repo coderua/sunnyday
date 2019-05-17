@@ -1,7 +1,11 @@
-# sunnyday
+# Sunny Day - 5 day weather forecast
+
+## Demo
+https://coderua.github.io/sunnyday/
 
 ## Project setup
 ```
+npm install -g @vue/cli # A runtime dependency
 npm install
 ```
 
@@ -15,20 +19,7 @@ npm run serve
 npm run build
 ```
 
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Run your unit tests
+### Run unit tests
 ```
 npm run test:unit
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
