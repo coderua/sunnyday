@@ -6,21 +6,30 @@
         @searchByLocation="fetchByLocation"
       />
 
-      <weather-info
-        :info="weatherForecast"
-        :selected-period="selectedPeriod"
-      />
+      <div
+        v-if="error"
+        class="weather-app__error"
+      >
+        {{ error }}
+      </div>
 
-      <weather-forecast-periods
-        :periods="weatherForecast.weatherForecastPeriodList"
-        :day="selectedDay"
-      />
+      <template v-if="!error">
+        <weather-info
+          :info="weatherForecast"
+          :selected-period="selectedPeriod"
+        />
 
-      <weather-forecast-days
-        :periods="weatherForecast.weatherForecastPeriodList"
-        :activeDay="selectedDay"
-        @selectedDay="selectDay"
-      />
+        <weather-forecast-periods
+          :periods="weatherForecast.weatherForecastPeriodList"
+          :day="selectedDay"
+        />
+
+        <weather-forecast-days
+          :periods="weatherForecast.weatherForecastPeriodList"
+          :activeDay="selectedDay"
+          @selectedDay="selectDay"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -68,6 +77,7 @@ export default {
        */
       selectedPeriod: undefined,
       loading: true,
+      error: false,
     };
   },
   created() {
@@ -82,6 +92,10 @@ export default {
   },
   methods: {
     fetchByLocation() {
+      if (!this.isOnline()) {
+        return;
+      }
+
       if ('geolocation' in navigator) {
         this.showSpinner();
 
@@ -91,6 +105,11 @@ export default {
       }
     },
     fetchWeather(params) {
+      if (!this.isOnline()) {
+        return;
+      }
+
+      this.error = false;
       this.showSpinner();
 
       // Get five days forecast for the location
@@ -101,7 +120,10 @@ export default {
           this.selectedPeriod = this.weatherForecast.weatherForecastPeriodList.getDailyItems(0)[0];
         })
         .catch((err) => {
-          console.error(err);
+          console.log('err', err.message);
+          if (err.response.status === 404) {
+            this.error = err.response.data.message;
+          }
         })
         .finally(() => {
           this.hideSpinner();
@@ -115,6 +137,16 @@ export default {
 
     selectPeriod(period) {
       this.selectedPeriod = period;
+    },
+
+    isOnline() {
+      const isOnline = navigator.onLine;
+
+      if (!isOnline) {
+        this.error = 'You are offline. Please, connect to the Internet.'
+      }
+
+      return isOnline;
     },
 
     showSpinner() {
@@ -159,5 +191,9 @@ export default {
       padding: 0;
       margin: 0;
     }
+  }
+
+  .weather-app__error {
+    padding: 2em;
   }
 </style>

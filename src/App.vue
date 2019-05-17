@@ -40,14 +40,11 @@ export default {
   },
   methods: {
     showSpinner() {
-      console.log('showSpinner');
       if (!this.loading) {
         this.loading = true;
       }
     },
     hideSpinner() {
-      console.log('hideSpinner');
-
       if (this.loading) {
         this.loading = false;
       }
