@@ -78,6 +78,7 @@ export default {
 
     @include for-phone-only {
       margin-top: 2em;
+      margin-bottom: 1.5em;
       flex-direction: column;
       text-align: center;
     }

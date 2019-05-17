@@ -143,9 +143,10 @@ export default {
     padding: 20px;
 
     @include for-phone-only {
-      padding: 10px;
+      padding-top: 4em;
       width: 100vw;
       margin: 10px;
+      box-shadow:none;
     }
 
     @include for-desktop-up {

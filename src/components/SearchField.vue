@@ -9,7 +9,7 @@
         autofocus
       />
       <button class="search-field-form__search-by-city-button">Search</button>
-      <button type="button" @click="searchByLocation">Current location</button>
+      <button class="search-field-form__search-by-location-button" type="button" @click="searchByLocation" title="Current location">&#11216;</button>
     </form>
 </template>
 
@@ -54,11 +54,16 @@ export default {
 
   .search-field-form {
     input, button {
-      font-size: 0.9em;
+      font-size: 1em;
       margin-right: 6px;
+    }
+
+    .search-field-form__search-by-location-button {
+      font-size: 0.83em;
     }
   }
   .search-field-form__input {
     width: 60%;
   }
+
 </style>
