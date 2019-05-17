@@ -68,6 +68,25 @@ class WeatherForecastPeriodList {
   }
 
   /**
+   * Returns first Daily weather period.
+   *
+   * @param {Number} day
+   * @param {Number} weekDay
+   * @return {WeatherForecastPeriod}
+   */
+  getFirstDailyItem(day = 0, weekDay = 0) {
+    const dailyItems = this.getDailyItems(day);
+
+    for (let i = 0, len = dailyItems.length; i < len; i += 1) {
+      if (dailyItems[i].day === weekDay) {
+        return dailyItems[i];
+      }
+    }
+
+    return dailyItems[0];
+  }
+
+  /**
    * Returns Approximate Daily Weather Forecast.
    * Used if a Weather service does not provide daily weather forecast.
    *

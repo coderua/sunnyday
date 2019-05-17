@@ -2,7 +2,7 @@
   <div
     class="weather-forecast-day-thumb"
     :class="{ '--active': activeDay === day }"
-    @click="selectDay(day)"
+    @click="selectDay(day, weather.day)"
   >
     <div class="weather-forecast-day-thumb__day-name">{{ dayName }}</div>
 
@@ -60,9 +60,10 @@ export default {
      *
      * @emits selectedDay
      * @param {Number} day
+     * @param {Number} weekDay
      */
-    selectDay(day) {
-      this.$emit('selectedDay', day);
+    selectDay(day, weekDay) {
+      window.EventBus.$emit('selectedDay', { day, weekDay });
     },
   },
 };

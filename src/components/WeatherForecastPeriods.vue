@@ -2,7 +2,9 @@
   <div class="weather-forecast-periods">
     <div
       v-for="weather in weathers"
+      :key="weather.dateTime"
       class="weather-forecast-periods__weather"
+      @click="selectPeriod(weather)"
     >
       <div class="weather-forecast-periods__hours">{{ hours(weather.date) }}</div>
       <div class="weather-forecast-periods__icon"><i :class="[weather.weatherIcon]"></i></div>
@@ -49,6 +51,9 @@ export default {
 
       return h <= 9 ? `0${h}` : h;
     },
+    selectPeriod(period) {
+      window.EventBus.$emit('selectedPeriod', period);
+    },
   },
 };
 </script>
@@ -70,6 +75,7 @@ export default {
   }
 
   .weather-forecast-periods__weather {
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

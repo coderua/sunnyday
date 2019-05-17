@@ -1,17 +1,15 @@
 <template>
-  <div class="weather-app">
-    <spinner
-      v-show="loading"
-      size="huge"
-    />
-
+  <div :class="['weather-app', {loading: loading}]">
     <div v-if="!loading">
       <search-field
         @searchByCity="fetchWeather"
         @searchByLocation="fetchByLocation"
       />
 
-      <weather-info :info="weatherForecast"/>
+      <weather-info
+        :info="weatherForecast"
+        :selected-period="selectedPeriod"
+      />
 
       <weather-forecast-periods
         :periods="weatherForecast.weatherForecastPeriodList"
@@ -28,7 +26,6 @@
 </template>
 
 <script>
-import Spinner from 'vue-simple-spinner';
 import WeatherServiceFactory from '../services/WeatherServiceFactory';
 import SearchField from './SearchField';
 import WeatherForecastDays from './WeatherForecastDays';
@@ -45,6 +42,8 @@ const weatherService = WeatherServiceFactory.create();
  * @vuedoc
  * @listens searchByCity
  * @listens searchByLocation
+ * @emits showSpinner
+ * @emits hideSpinner
  * @exports components/WeatherApp
  */
 export default {
@@ -52,7 +51,6 @@ export default {
   components: {
     WeatherForecastPeriods,
     WeatherInfo,
-    Spinner,
     SearchField,
     WeatherForecastDays,
   },
@@ -60,16 +58,27 @@ export default {
     return {
       city: 'Warsaw',
       currentWeather: null,
-      /*
+      /**
        * @type {WeatherForecast}
        */
-      weatherForecast: {},
+      weatherForecast: undefined,
       selectedDay: 0,
+      /**
+       * @type {WeatherForecastPeriod}
+       */
+      selectedPeriod: undefined,
       loading: true,
     };
   },
   created() {
     this.fetchByLocation();
+
+    window.EventBus.$on('selectedDay', this.selectDay);
+    window.EventBus.$on('selectedPeriod', this.selectPeriod);
+  },
+  beforeDestroy() {
+    window.EventBus.$off('selectedDay', this.selectDay);
+    window.EventBus.$off('selectedPeriod', this.selectPeriod);
   },
   methods: {
     fetchByLocation() {
@@ -88,6 +97,8 @@ export default {
       weatherService.getFiveDayWeather(params)
         .then((weatherForecast) => {
           this.weatherForecast = weatherForecast;
+
+          this.selectedPeriod = this.weatherForecast.weatherForecastPeriodList.getDailyItems(0)[0];
         })
         .catch((err) => {
           console.error(err);
@@ -97,19 +108,28 @@ export default {
         });
     },
 
-    selectDay(day) {
+    selectDay({ day, weekDay }) {
       this.selectedDay = day;
+      this.selectedPeriod = this.weatherForecast.weatherForecastPeriodList.getFirstDailyItem(day, weekDay);
+    },
+
+    selectPeriod(period) {
+      this.selectedPeriod = period;
     },
 
     showSpinner() {
       if (!this.loading) {
         this.loading = true;
       }
+
+      this.$emit('showSpinner');
     },
     hideSpinner() {
       if (this.loading) {
         this.loading = false;
       }
+
+      this.$emit('hideSpinner');
     },
   },
 };
@@ -131,6 +151,12 @@ export default {
     @include for-desktop-up {
       padding: 50px;
       width: 50vw;
+    }
+
+    &.loading {
+      height: 0;
+      padding: 0;
+      margin: 0;
     }
   }
 </style>

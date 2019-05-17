@@ -113,8 +113,6 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
 
     const url = `${this._apiEndpoint}/weather`;
 
-    console.log('[OpenWeatherMapAPIService]: Request => ', url);
-
     return this._request('get', url, params);
   }
 
@@ -130,8 +128,6 @@ class OpenWeatherMapAPIService extends BaseWeatherService {
     }
 
     const url = `${this._apiEndpoint}/forecast`;
-
-    console.log('[OpenWeatherMapAPIService]: Request => ', url);
 
     return this._request('get', url, params)
       .then((weatherForecastJson) => {

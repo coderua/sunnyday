@@ -23,6 +23,7 @@
  */
 import WeatherForecast from '../models/WeatherForecast';
 import formattedDate from '../helpers/formatted-date';
+import WeatherForecastPeriod from '../models/WeatherForecastPeriod';
 
 const formattedDateOptions = { weekday: 'long', hour: 'numeric' };
 
@@ -38,8 +39,9 @@ export default {
       default: () => new WeatherForecast(),
     },
     selectedPeriod: {
-      type: Number,
-      default: 0,
+      type: Object,
+      required: true,
+      default: () => new WeatherForecastPeriod(),
     },
   },
   computed: {
@@ -49,8 +51,7 @@ export default {
      * @return {WeatherForecastPeriod}
      */
     weather() {
-      console.log(this.selectedPeriod);
-      return this.info.weatherForecastPeriodList.items[this.selectedPeriod];
+      return this.selectedPeriod;
     },
 
     /**
