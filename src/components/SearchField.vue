@@ -1,9 +1,10 @@
 <template>
-    <form @submit.prevent="searchByCity">
+    <form @submit.prevent="searchByCity" class="search-field-form">
       <input
         v-model="query"
         name="search"
         type="search"
+        class="search-field-form__input"
         placeholder="Enter location"
       />
       <button>Search</button>

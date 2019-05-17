@@ -1,8 +1,12 @@
 <template>
   <div class="weather-forecast-days">
       <weather-forecast-day-thumb
-        v-for="forecast in dailyForecasts"
+        v-for="(forecast, day) in dailyForecasts"
+        :activeDay="activeDay"
         :weather="forecast"
+        :day="day"
+        :key="forecast.dateTime"
+        @selectedDay="selectedDay"
       />
   </div>
 </template>
@@ -14,6 +18,7 @@
  * Custom tag `<weather-forecast-days />`
  *
  * @vuedoc
+ * @emits selectedDay
  * @exports components/WeatherForecastDays
  */
 import WeatherForecast from '../models/WeatherForecast';
@@ -32,10 +37,25 @@ export default {
       type: Number,
       default: 5,
     },
+    activeDay: {
+      type: Number,
+      default: 0,
+    },
   },
   computed: {
     dailyForecasts() {
-      return this.periods.getApproximateDaysWeatherForecast().items;
+      return this.periods.getApproximateDaysWeatherForecast().items.slice(0, 5);
+    },
+  },
+  methods: {
+    /**
+     * Notify parent component about selecting a new day
+     *
+     * @emits selectedDay
+     * @param {Number} day
+     */
+    selectedDay(day) {
+      this.$emit('selectedDay', day);
     },
   },
 };

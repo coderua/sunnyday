@@ -13,7 +13,16 @@
 
       <weather-info :info="weatherForecast"/>
 
-      <weather-forecast-days :periods="weatherForecast.weatherForecastPeriodList" />
+      <weather-forecast-periods
+        :periods="weatherForecast.weatherForecastPeriodList"
+        :day="selectedDay"
+      />
+
+      <weather-forecast-days
+        :periods="weatherForecast.weatherForecastPeriodList"
+        :activeDay="selectedDay"
+        @selectedDay="selectDay"
+      />
     </div>
   </div>
 </template>
@@ -24,6 +33,7 @@ import WeatherServiceFactory from '../services/WeatherServiceFactory';
 import SearchField from './SearchField';
 import WeatherForecastDays from './WeatherForecastDays';
 import WeatherInfo from './WeatherInfo';
+import WeatherForecastPeriods from './WeatherForecastPeriods';
 
 const weatherService = WeatherServiceFactory.create();
 
@@ -40,6 +50,7 @@ const weatherService = WeatherServiceFactory.create();
 export default {
   name: 'WeatherApp',
   components: {
+    WeatherForecastPeriods,
     WeatherInfo,
     Spinner,
     SearchField,
@@ -53,6 +64,7 @@ export default {
        * @type {WeatherForecast}
        */
       weatherForecast: {},
+      selectedDay: 0,
       loading: true,
     };
   },
@@ -84,6 +96,12 @@ export default {
           this.hideSpinner();
         });
     },
+
+    selectDay(day) {
+      console.log('selectDay()', day);
+      this.selectedDay = day;
+    },
+
     showSpinner() {
       if (!this.loading) {
         this.loading = true;
@@ -99,5 +117,11 @@ export default {
 </script>
 
 <style scoped>
-
+  .weather-app {
+    box-shadow:
+      0 19px 38px rgba(0,0,0,0.30),
+      0 15px 12px rgba(0,0,0,0.22);
+    padding: 50px;
+    width: 50vw;
+  }
 </style>

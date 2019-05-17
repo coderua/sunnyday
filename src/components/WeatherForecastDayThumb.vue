@@ -1,9 +1,13 @@
 <template>
-  <div class="weather-forecast-days">
-    <div class="weather-forecast-days__day-name">{{ dayName }}</div>
+  <div
+    class="weather-forecast-day-thumb"
+    :class="{ '--active': activeDay === day }"
+    @click="selectDay(day)"
+  >
+    <div class="weather-forecast-day-thumb__day-name">{{ dayName }}</div>
+    <div class="weather-forecast-day-thumb__temp-max">{{ weather.tempMax }}&deg; {{ weather.temperatureUnit }}</div>
+    <div class="weather-forecast-day-thumb__temp-min">{{ weather.tempMin }}&deg; {{ weather.temperatureUnit }}</div>
     <i :class="[weather.weatherIcon]"></i>
-    <div class="weather-forecast-days__temp-max">{{ weather.tempMax }}&deg; {{ weather.temperatureUnit }}</div>
-    <div class="weather-forecast-days__temp-min">{{ weather.tempMin }}&deg; {{ weather.temperatureUnit }}</div>
   </div>
 </template>
 
@@ -14,6 +18,7 @@
  * Custom tag `<weather-forecast-day-thumb />`
  *
  * @vuedoc
+ * @emits selectedDay
  * @exports components/WeatherForecastDayThumb
  */
 import formattedDate from '../helpers/formatted-date';
@@ -29,7 +34,11 @@ export default {
     },
     day: {
       type: Number,
-      default: 1,
+      default: 0,
+    },
+    activeDay: {
+      type: Number,
+      default: 0,
     },
   },
   computed: {
@@ -37,21 +46,39 @@ export default {
       return formattedDate(this.weather.date, { weekday: 'short' });
     },
   },
+  methods: {
+    /**
+     * Notify parent component about selecting a new day
+     *
+     * @emits selectedDay
+     * @param {Number} day
+     */
+    selectDay(day) {
+      console.log('selectedDay()', day);
+      this.$emit('selectedDay', day);
+    },
+  },
 };
 </script>
 
 <style scoped>
-  .weather-forecast-days {
+  .weather-forecast-day-thumb {
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
 
-  .weather-forecast-days__temp-max {
+  .weather-forecast-day-thumb.--active {
+    border: 1px solid #e9e9e9;
+    border-radius: 1px;
+  }
+
+  .weather-forecast-day-thumb__temp-max {
     color: #924da3;
   }
 
-  .weather-forecast-days__temp-min {
+  .weather-forecast-day-thumb__temp-min {
     color: #3f76fe;
   }
 </style>

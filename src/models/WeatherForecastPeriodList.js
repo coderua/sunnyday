@@ -50,6 +50,24 @@ class WeatherForecastPeriodList {
   }
 
   /**
+   * Returns weather periods for specified day number.
+   *
+   * @param {Number|undefined} [day=undefined]
+   * @return {WeatherForecastPeriod[]}
+   */
+  getDailyItems(day = 0) {
+    if (this.#items.length === 0) {
+      return this.#items;
+    }
+
+    const maxPeriods = 8;
+    const start = day * maxPeriods;
+    const end = start + maxPeriods;
+
+    return this.#items.slice(start, end);
+  }
+
+  /**
    * Returns Approximate Daily Weather Forecast.
    * Used if a Weather service does not provide daily weather forecast.
    *
