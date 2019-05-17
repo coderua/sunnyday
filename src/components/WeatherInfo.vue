@@ -13,6 +13,12 @@
 </template>
 
 <script>
+import WeatherForecast from '../models/WeatherForecast';
+import formattedDate from '../helpers/formatted-date';
+import WeatherForecastPeriod from '../models/WeatherForecastPeriod';
+
+const formattedDateOptions = { weekday: 'long', hour: 'numeric' };
+
 /**
  * WeatherInfo component shows weather forecast for selected period (hour).
  *
@@ -21,12 +27,6 @@
  * @vuedoc
  * @exports components/WeatherInfo
  */
-import WeatherForecast from '../models/WeatherForecast';
-import formattedDate from '../helpers/formatted-date';
-import WeatherForecastPeriod from '../models/WeatherForecastPeriod';
-
-const formattedDateOptions = { weekday: 'long', hour: 'numeric' };
-
 export default {
   name: 'WeatherInfo',
   props: {
