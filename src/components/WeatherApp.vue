@@ -98,7 +98,6 @@ export default {
     },
 
     selectDay(day) {
-      console.log('selectDay()', day);
       this.selectedDay = day;
     },
 
@@ -116,12 +115,22 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  @import "../assets/css/media-query-mixin.scss";
+
   .weather-app {
-    box-shadow:
-      0 19px 38px rgba(0,0,0,0.30),
-      0 15px 12px rgba(0,0,0,0.22);
-    padding: 50px;
-    width: 50vw;
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+    padding: 20px;
+
+    @include for-phone-only {
+      padding: 10px;
+      width: 100vw;
+      margin: 10px;
+    }
+
+    @include for-desktop-up {
+      padding: 50px;
+      width: 50vw;
+    }
   }
 </style>

@@ -61,9 +61,15 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  @import "../assets/css/media-query-mixin.scss";
+
   .weather-forecast-days {
     display: flex;
     justify-content: space-around;
+
+    @include for-phone-only {
+      flex-direction: column;
+    }
   }
 </style>

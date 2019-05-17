@@ -5,9 +5,17 @@
     @click="selectDay(day)"
   >
     <div class="weather-forecast-day-thumb__day-name">{{ dayName }}</div>
-    <div class="weather-forecast-day-thumb__temp-max">{{ weather.tempMax }}&deg; {{ weather.temperatureUnit }}</div>
-    <div class="weather-forecast-day-thumb__temp-min">{{ weather.tempMin }}&deg; {{ weather.temperatureUnit }}</div>
-    <i :class="[weather.weatherIcon]"></i>
+
+    <div class="weather-forecast-day-thumb__icon"><i :class="[weather.weatherIcon]"></i></div>
+
+    <div class="weather-forecast-day-thumb__temp-max">
+      {{ weather.tempMax }}&deg; {{ weather.temperatureUnit }}
+    </div>
+
+    <div class="weather-forecast-day-thumb__temp-min">
+      {{ weather.tempMin }}&deg; {{ weather.temperatureUnit }}
+    </div>
+
   </div>
 </template>
 
@@ -54,19 +62,37 @@ export default {
      * @param {Number} day
      */
     selectDay(day) {
-      console.log('selectedDay()', day);
       this.$emit('selectedDay', day);
     },
   },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  @import "../assets/css/media-query-mixin.scss";
+
   .weather-forecast-day-thumb {
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: .9em 2em;
+
+    div {
+      margin-bottom: .3em;
+    }
+
+    @include for-phone-only {
+      flex-direction: row;
+      padding: .2em 1em;
+    }
+  }
+
+  .weather-forecast-day-thumb__day-name {
+    @include for-phone-only {
+      text-align: left;
+      width: 20vw;
+    }
   }
 
   .weather-forecast-day-thumb.--active {

@@ -6,8 +6,9 @@
         type="search"
         class="search-field-form__input"
         placeholder="Enter location"
+        autofocus
       />
-      <button>Search</button>
+      <button class="search-field-form__search-by-city-button">Search</button>
       <button type="button" @click="searchByLocation">Current location</button>
     </form>
 </template>
@@ -48,6 +49,16 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  @import "../assets/css/media-query-mixin.scss";
 
+  .search-field-form {
+    input, button {
+      font-size: 0.9em;
+      margin-right: 6px;
+    }
+  }
+  .search-field-form__input {
+    width: 60%;
+  }
 </style>

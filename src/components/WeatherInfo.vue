@@ -3,9 +3,12 @@
     <div class="weather-info__location">
       <span class="weather-info__location__city">{{ info.location }}</span>
       <span class="weather-info__location__date">{{ formattedDate }}</span>
+      <span class="weather-info__location__description">{{ weather.description }}</span>
     </div>
     <div class="weather-info__icon"><i :class="weather.weatherIcon"></i></div>
-    <div class="weather-info__temperature">{{ weather.temp }}&deg; {{ weather.temperatureUnit }}</div>
+    <div class="weather-info__temperature">
+      {{ weather.temp }}&deg; <span class="weather-info__temperature__unit">{{ weather.temperatureUnit }}</span>
+    </div>
   </div>
 </template>
 
@@ -46,7 +49,7 @@ export default {
      * @return {WeatherForecastPeriod}
      */
     weather() {
-      console.log(this.info.weatherForecastPeriodList);
+      console.log(this.selectedPeriod);
       return this.info.weatherForecastPeriodList.items[this.selectedPeriod];
     },
 
@@ -62,20 +65,75 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  @import "../assets/css/media-query-mixin.scss";
+
   .weather-info {
     display: flex;
     justify-content: space-between;
-    margin-top: 3em;
-    margin-bottom: 2em;
+    align-items: center;
+    margin-top: 3.2em;
+    margin-bottom: 3em;
+
+    @include for-phone-only {
+      margin-top: 2em;
+      flex-direction: column;
+      text-align: center;
+    }
   }
 
   .weather-info__location {
     display: flex;
     flex-direction: column;
     text-align: left;
+    font-size: 1.8em;
   }
-  .weather-info__icon i {
-    font-size: 66px;
+
+  .weather-info__location__city {
+    margin-bottom: 0.3em;
+
+    @include for-phone-only {
+      font-size: 1em;
+      text-align: center;
+    }
+  }
+
+  .weather-info__location__description {
+    font-size: 0.6em;
+
+    @include for-phone-only {
+      text-align: center;
+    }
+  }
+
+  .weather-info__location__date {
+    font-size: 0.6em;
+    @include for-phone-only {
+      display: none;
+    }
+  }
+
+  .weather-info__temperature {
+    font-size: 4em;
+
+    @include for-phone-only {
+      margin-top: .4em;
+    }
+
+    .weather-info__temperature__unit {
+      @include for-phone-only {
+        display: none;
+      }
+    }
+  }
+
+  .weather-info__icon {
+    @include for-phone-only {
+      margin-top: 2em;
+    }
+
+    i {
+      font-size: 5em;
+    }
   }
 </style>

@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "core-js": "^2.6.5",
+    "uninstall": "0.0.0",
     "vue": "^2.6.10",
     "vue-simple-spinner": "^1.2.8"
   },
@@ -26,7 +27,11 @@
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "expect": "^24.8.0",
+    "less": "^3.9.0",
+    "less-loader": "^5.0.0",
     "moxios": "^0.4.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.5.21"
   }
 }
