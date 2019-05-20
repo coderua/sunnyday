@@ -30,8 +30,15 @@ npm run test:unit
 ```
 
 ## Todo
+- Implement sexy UI.
+- Make page layout using css grids.
 - Implement unit tests for ui components.
-- Change background depends on the weather and time.
+- Show more weather information: humidity, rain possibility, wind speed, etc. 
+- Implement temperature chart. 
+- Real-time switching between weather forecast providers. 
+- Switching between metric and imperial unit systems (Celsius, Fahrenheit, etc.).
+- Favorite cities list.
+- Changing page background depends on the weather and time.
 - Implement PWA.
-- Add internationalization for messages.
-- Add more animation effects
+- Add internationalization for messages. 
+- Add more animation effects.
